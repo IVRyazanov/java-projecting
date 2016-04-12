@@ -22,7 +22,6 @@ public class Controller implements Observable {
     }
 
 
-
     public Iterator<Map.Entry<MboObject, Boolean>> getEntry() {
         return entry;
     }
@@ -40,16 +39,21 @@ public class Controller implements Observable {
 
     public class ThreadPusher implements Runnable {
         Iterator<Map.Entry<MboObject, Boolean>> entry = getEntry();
+        private int mboMapSize = mboMap.size();
+        private int mboCountForThread = mboMapSize / (THREAD_COUNT - 1);
+
         @Override
         public void run() {
             int i = 0;
-            while (THREAD_COUNT > i++){
-                System.out.println(Thread.currentThread().getId() + " создает поток");
-                if(entry.hasNext()){
-                    Worker workerObj = new Worker(Controller.this, entry.next().getKey());
+            List<MboObject> objectListForThread = new ArrayList<MboObject>();
+            for (Map.Entry<MboObject, Boolean> entry : mboMap.entrySet()) {
+                // если текущая итерация контейнера кратна кол-ву записей для нити, то создаем и передаем туда лист MboObject
+                objectListForThread.add(entry.getKey());
+                if(i++ % mboCountForThread == 0){
+                    Worker workerObj = new Worker(Controller.this, objectListForThread);
                     Thread workerThread = new Thread(workerObj);
-                    registerObserver(workerObj);
                     workerThread.start();
+                    objectListForThread.clear();
                 }
             }
         }
@@ -79,9 +83,9 @@ public class Controller implements Observable {
 
     @Override
     public void notifyObserver(Observer observer) {
-        if(entry.hasNext()){
-            observer.update(entry.next().getKey());
-            ((Runnable)observer).run();
-        }
+//        if(entry.hasNext()){
+//            observer.update(entry.next().getKey());
+//            ((Runnable)observer).run();
+//        }
     }
 }
