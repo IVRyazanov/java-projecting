@@ -4,29 +4,40 @@ package observerThread.imp;
 import observerThread.MboObject;
 import observerThread.Observable;
 import observerThread.Observer;
+import org.apache.log4j.Logger;
 
 import java.util.*;
+
 
 /**
  * Created by Ivan.Ryazanov on 11.04.2016.
  */
 public class Controller implements Observable {
+    final static Logger log = Logger.getLogger(Controller.class);
     private final int THREAD_COUNT = 10;
     private LinkedHashMap<MboObject, Boolean> mboMap = new LinkedHashMap<MboObject, Boolean>();
     private Iterator<Map.Entry<MboObject, Boolean>> entry;
-    private List<Observer> observerList = new ArrayList<Observer>(THREAD_COUNT);
+    private List<Thread> observerList = new ArrayList<Thread>(THREAD_COUNT);
 
     public Controller() {
         generateMap();
         entry = mboMap.entrySet().iterator();
     }
 
+    public void readMap(){
+        for (Map.Entry<MboObject, Boolean> entry : mboMap.entrySet()) {
+            // если текущая итерация контейнера кратна кол-ву записей для нити, то создаем и передаем туда лист MboObject
+            log.info(entry.getKey());
+            }
+        }
+
+
 
     public Iterator<Map.Entry<MboObject, Boolean>> getEntry() {
         return entry;
     }
 
-    public List<Observer> getList() {
+    public List<Thread> getList() {
         return observerList;
     }
 
@@ -49,30 +60,52 @@ public class Controller implements Observable {
             for (Map.Entry<MboObject, Boolean> entry : mboMap.entrySet()) {
                 // если текущая итерация контейнера кратна кол-ву записей для нити, то создаем и передаем туда лист MboObject
                 objectListForThread.add(entry.getKey());
-                if(i++ % mboCountForThread == 0){
-                    Worker workerObj = new Worker(Controller.this, objectListForThread);
-                    Thread workerThread = new Thread(workerObj);
-                    workerThread.start();
-                    objectListForThread.clear();
+                if (i++ % mboCountForThread == 0) {
+                    createThread(objectListForThread);
+                }
+            }
+            // записываем остаток
+            createThread(objectListForThread);
+            for (Thread thread : getList()) {
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }
     }
 
+    private void createThread(List<MboObject> objectListForThread) {
+        Worker workerObj = new Worker(Controller.this, new ArrayList<MboObject>(objectListForThread));
+        Thread workerThread = new Thread(workerObj);
+        registerObserver(workerThread);
+        workerThread.start();
+        objectListForThread.clear();
+    }
 
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws InterruptedException {
+        long start = new Date().getTime();
+        log.debug("Начало =" + start);
         Controller controller = new Controller();
 //        System.out.println(controller.getEntry().next().getKey().getMboNum());
 //        System.out.println(controller.mboMap.get(new MboObject("147229034", "76")));
         ThreadPusher threadPusher = controller.new ThreadPusher();
         Thread thread = new Thread(threadPusher);
         thread.start();
+        thread.join();
+        log.debug(Worker.getUpdatedRows());
+        long end = new Date().getTime();
+        log.debug("Окончание =" + start);
+        log.debug("Время выполнения =" + (end - start));
+
 
     }
 
 
     @Override
-    public void registerObserver(Observer observer) {
+    public void registerObserver(Thread observer) {
         observerList.add(observer);
     }
 

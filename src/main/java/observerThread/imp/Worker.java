@@ -10,10 +10,17 @@ import java.util.List;
  * Created by Ivan.Ryazanov on 11.04.2016.
  */
 public class Worker implements Observer, Runnable {
+    final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Controller.class);
+    private static int updatedRows = 0;
     private List<MboObject> listMbos;
     private Observable controller;
+
     public Worker(Observable observable, List<MboObject> listMbos) {
         setListMbos(listMbos);
+    }
+
+    public static int getUpdatedRows() {
+        return updatedRows;
     }
 
     @Override
@@ -29,20 +36,17 @@ public class Worker implements Observer, Runnable {
     }
 
     @Override
-    public void update(List<MboObject> listMbos) {
-        setListMbos(listMbos);
+    public void update() {
+        for (MboObject mboObject : listMbos) {
+            log.debug(this + " update " + mboObject);
+            updatedRows++;
+        }
     }
 
     @Override
     public void run() {
-        System.out.println("ПОТОК " + this + " начинает обрабатывать" + listMbos);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-//        controller.notifyObserver(this);
-        System.out.println("ПОТОК " + this + " обработал" + listMbos);
-
+        log.debug("ПОТОК " + this + " начинает обрабатывать" + listMbos);
+        update();
+        log.debug("ПОТОК " + this + " обработал" + listMbos);
     }
 }
