@@ -6,6 +6,7 @@ import observerThread.Observable;
 import observerThread.Observer;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
 import java.util.*;
 
 
@@ -42,7 +43,7 @@ public class Controller implements Observable {
     }
 
     private void generateMap() {
-        List<MboObject> mboList = Reader.getMboList();
+        List<MboObject> mboList = FileWorker.getMboList();
         for (MboObject mbo : mboList) {
             mboMap.put(mbo, false);
         }
@@ -85,7 +86,7 @@ public class Controller implements Observable {
     }
 
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         long start = new Date().getTime();
         log.debug("Начало =" + start);
         Controller controller = new Controller();
@@ -97,6 +98,7 @@ public class Controller implements Observable {
         thread.join();
         log.debug(Worker.getUpdatedRows());
         long end = new Date().getTime();
+        FileWorker.closeWriter();
         log.debug("Окончание =" + start);
         log.debug("Время выполнения =" + (end - start));
 

@@ -4,6 +4,8 @@ package observerThread;
  * Created by Ivan.Ryazanov on 11.04.2016.
  */
 public class MboObject {
+    StringBuffer stringBuffer = new StringBuffer();
+
     @Override
     public String toString() {
         return "MboObject{" +
@@ -48,4 +50,16 @@ public class MboObject {
         return mboNum;
     }
 
+    public String toFileView() {
+        stringBuffer.setLength(0);
+        stringBuffer.append("\"");
+        stringBuffer.append(mboNum);
+        stringBuffer.append("\"");
+        stringBuffer.append(";");
+        stringBuffer.append("\"");
+        stringBuffer.append(siteid);
+        stringBuffer.append("\"");
+        stringBuffer.append("\n");
+        return stringBuffer.toString();
+    }
 }

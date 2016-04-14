@@ -4,6 +4,7 @@ import observerThread.MboObject;
 import observerThread.Observable;
 import observerThread.Observer;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -40,6 +41,13 @@ public class Worker implements Observer, Runnable {
         for (MboObject mboObject : listMbos) {
             log.debug(this + " update " + mboObject);
             updatedRows++;
+            if(updatedRows%5 == 0){
+                try {
+                    FileWorker.writeInFile(mboObject);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
