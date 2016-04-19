@@ -13,12 +13,34 @@ import java.util.List;
  * Created by Ivan.Ryazanov on 11.04.2016.
  */
 public class FileWorker {
-    private static String path = "src/main/resources/63-83.dsv";
-    private static FileWriter fileWriter = openFile();
+    private static String pathToUpdate = null;
+    private static String pathToError = null;
+    private static FileWriter fileWriter;
+    private static List<MboObject> mboList;
 
-    private static FileWriter openFile() {
+    public int getMboCount(){
+        return mboList.size();
+    }
+
+
+    public FileWorker() throws Exception {
+        fileWriter = openFile();
+        mboList = readFile();
+    }
+
+    public static void setPathToUpdate(String pathToUpdate) {
+        FileWorker.pathToUpdate = pathToUpdate;
+    }
+
+    public static void setPathToError(String pathToError) {
+        FileWorker.pathToError = pathToError;
+    }
+
+    private static FileWriter openFile() throws Exception {
+        if(pathToError == null)
+            throw new Exception("Ошибка заполнения пути открытия файла прежде необходимо вызывать метод pathToError");
         try {
-            fileWriter = new FileWriter("src/main/resources/not_completed.txt");
+            fileWriter = new FileWriter(pathToError);
         } catch (IOException e){
             e.printStackTrace();
         } catch (Exception e){
@@ -31,7 +53,6 @@ public class FileWorker {
         return fileWriter;
     }
 
-    private static List<MboObject> mboList = readFile();
 
 
     public static List<MboObject> getMboList() {
@@ -39,11 +60,13 @@ public class FileWorker {
     }
 
 
-    private static List<MboObject> readFile() {
+    private static List<MboObject> readFile() throws Exception {
+        if(pathToError == null)
+            throw new Exception("Ошибка заполнения пути открытия файла прежде необходимо вызывать метод setPathToUpdate");
         List<MboObject> stringList = new ArrayList<MboObject>();
         BufferedReader fileReader = null;
         try {
-            fileReader = new BufferedReader(new FileReader(path));
+            fileReader = new BufferedReader(new FileReader(pathToUpdate));
             String line;
             while ((line = fileReader.readLine()) != null){
                 MboObject mboObject = new MboObject(line.split(";")[0].replace("\"", ""), line.split(";")[1].replace("\"", ""));

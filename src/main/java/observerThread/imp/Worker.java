@@ -5,18 +5,26 @@ import observerThread.Observable;
 import observerThread.Observer;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Ivan.Ryazanov on 11.04.2016.
  */
 public class Worker implements Observer, Runnable {
-    final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Controller.class);
-    private static int updatedRows = 0;
-    private List<MboObject> listMbos;
-    private Observable controller;
+    protected final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Controller.class);
+    protected static int updatedRows = 0;
+    protected List<MboObject> listMbos;
+    protected Observable controller;
+    protected Map.Entry<String, String> session; // ui , ip
+
+
 
     public Worker(Observable observable, List<MboObject> listMbos) {
+        this.controller = observable;
+        Iterator<Map.Entry<String, String>> sessionControllerIterator = ((Controller)controller).getSessionController().iterator();
+        session = sessionControllerIterator.next();
         setListMbos(listMbos);
     }
 
@@ -27,7 +35,9 @@ public class Worker implements Observer, Runnable {
     @Override
     public String toString() {
         return "Worker{" +
-                "поток =" + Thread.currentThread().getId() +
+                "controller=" + controller +
+                ", listMbos=" + listMbos +
+               ", session='" + session + '\'' +
                 '}';
     }
 
@@ -53,8 +63,6 @@ public class Worker implements Observer, Runnable {
 
     @Override
     public void run() {
-        log.debug("ПОТОК " + this + " начинает обрабатывать" + listMbos);
         update();
-        log.debug("ПОТОК " + this + " обработал" + listMbos);
     }
 }

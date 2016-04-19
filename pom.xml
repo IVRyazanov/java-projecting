@@ -6,7 +6,21 @@
 
     <groupId>Java</groupId>
     <artifactId>Projecting</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
+
+
+    <build>
+
+    <extensions>
+    <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ftp</artifactId>
+        <version>2.6</version>
+    </extension>
+    </extensions>
+
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>log4j</groupId>
@@ -14,6 +28,17 @@
             <version>1.2.17</version>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <downloadUrl>http://10.144.68.27/</downloadUrl>
+        <repository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>ekasui-git-maven</id>
+            <name>Enterprise Systems Maven Repository</name>
+            <url>ftp://10.144.68.27/home/maven/maven_resources/</url>
+            <layout>default</layout>
+        </repository>
+    </distributionManagement>
 
 
 </project>
