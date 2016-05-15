@@ -13,6 +13,11 @@ public class Creator {
         Bus bus = new Bus();
         bus.setNumber("12321");
         BusDAOImpl busDAO = new BusDAOImpl();
-        busDAO.addBus(bus);
+        System.out.println(busDAO.getAllBusses());
+
+        busDAO.addBus(new Bus("aa11s"));
+        busDAO.addBus(new Bus("aas23123222"));
+        busDAO.addBus(new Bus("aa12321321s2233"));
+        busDAO.addBus(new Bus("aaa"));
     }
 }
