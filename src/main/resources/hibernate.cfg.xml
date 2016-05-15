@@ -14,7 +14,6 @@
         <property name="hibernate.connection.password">postgres</property>
         <property name="hibernate.connection.url">jdbc:postgresql://192.168.1.39:5432/firm</property>
 
-
         <property name="connection_pool_size">1</property>
 
         <property name="hbm2ddl.auto">create</property>
