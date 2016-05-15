@@ -9,20 +9,13 @@ import java.util.Set;
  * Created by Иван on 11.05.2016.
  */
 @Entity
-@Table(name = "Driver")
 public class Driver {
     @Id
-    @Column(name="driver_id")
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "increment")
     private Long id;
-    private Craft craft;
-    @Column(name="name")
     private String name;
-    @Column(name="surname")
     private String surname;
-    @Column(name="age")
     private int age;
-    private Set<Bus> busses = new HashSet<Bus>();
 
     public Driver() {
     }
@@ -35,13 +28,7 @@ public class Driver {
         this.id = id;
     }
 
-    public Craft getCraft() {
-        return craft;
-    }
 
-    public void setCraft(Craft craft) {
-        this.craft = craft;
-    }
 
     public String getName() {
         return name;
@@ -67,11 +54,5 @@ public class Driver {
         this.age = age;
     }
 
-    public Set getBusses() {
-        return busses;
-    }
 
-    public void setBusses(Set busses) {
-        this.busses = busses;
-    }
 }

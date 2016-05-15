@@ -1,5 +1,7 @@
 package hibernate.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -7,20 +9,21 @@ import java.util.Set;
 /**
  * Created by Иван on 11.05.2016.
  */
-@Entity
-@Table(name = "Busses")
+@Entity(name = "Busses")
 public class Bus {
     @Id
-    @Column(name="bus_id")
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "increment")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "bus_id_generator")
+    @SequenceGenerator(name = "bus_id_generator", sequenceName = "bus_id")
+    @Column(name = "bus_id")
     private Long id;
-    @Column(name="number")
     private String number;
-    private Set<Driver> drivers = new HashSet<Driver>();
-    @Column(name="route_id")
     private Long route_id;
 
     public Bus() {
+    }
+
+    public Bus(String number) {
+        this.number = number;
     }
 
     public Long getId() {
@@ -39,13 +42,6 @@ public class Bus {
         this.number = number;
     }
 
-    public Set getDrivers() {
-        return drivers;
-    }
-
-    public void setDrivers(Set drivers) {
-        this.drivers = drivers;
-    }
 
     public Long getRoute_id() {
         return route_id;

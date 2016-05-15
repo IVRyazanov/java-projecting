@@ -7,12 +7,12 @@
     <session-factory>
 
 
+        <property name="hibernate.hbm2ddl.auto">update</property>
 
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
         <property name="hibernate.connection.username">postgres</property>
         <property name="hibernate.connection.password">postgres</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://192.168.119.128:5432/firm</property>
-
+        <property name="hibernate.connection.url">jdbc:postgresql://192.168.1.39:5432/firm</property>
 
 
         <property name="connection_pool_size">1</property>
@@ -22,9 +22,7 @@
         <property name="show_sql">true</property>
 
         <mapping class="hibernate.model.Bus"></mapping>
-        <mapping class="hibernate.model.Craft"></mapping>
-        <mapping class="hibernate.model.Driver"></mapping>
-        <mapping class="hibernate.model.Route"></mapping>
+
 
 
 

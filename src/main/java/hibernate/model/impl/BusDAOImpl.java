@@ -6,10 +6,13 @@ import hibernate.model.Driver;
 import hibernate.model.Route;
 import hibernate.model.dao.BusDAO;
 import org.hibernate.Session;
-import org.hibernate.mapping.Collection;
 
 import javax.swing.*;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Created by Иван on 12.05.2016.
@@ -40,9 +43,20 @@ public class BusDAOImpl implements BusDAO {
         return null;
     }
 
-    @Override
-    public Collection getAllBusses() throws SQLException {
-        return null;
+    public Collection<Bus> getAllBusses() throws SQLException {
+        Session session = null;
+        List<Bus> busses = new ArrayList<Bus>();
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            busses = session.createCriteria(Bus.class).list();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка 'getAll'", JOptionPane.OK_OPTION);
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+        return busses;
     }
 
     @Override
