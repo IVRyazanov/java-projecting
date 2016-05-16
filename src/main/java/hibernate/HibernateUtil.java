@@ -11,16 +11,15 @@ import java.nio.file.Paths;
  * Created by Иван on 12.05.2016.
  */
 public class HibernateUtil {
-    private static SessionFactory sessionFactory;
+    private static final SessionFactory sessionFactory = createFactory();
 
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
     }
 
-    static {
+    private static SessionFactory createFactory() {
         try {
-
-            sessionFactory = new Configuration().configure().buildSessionFactory();
+            return new Configuration().configure().buildSessionFactory();
         } catch (Throwable throwable) {
             System.err.println("Unable to create session");
             throw new ExceptionInInitializerError(throwable);
