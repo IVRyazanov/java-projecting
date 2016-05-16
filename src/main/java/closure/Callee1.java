@@ -5,7 +5,6 @@ package closure;
  */
 public class Callee1 implements Incrementable {
     private int i;
-    @Override
     public void increment() {
         i++;
         System.out.println(i);
