@@ -12,10 +12,10 @@
         <property name="lastname"/>
         <set name="events" table="PERSON_EVENTS">
             <key column="PERSON_ID"/>
-            <many-to-many column="EVENT_ID" class="Event"/>
+            <many-to-many column="EVENT_ID" class="Event" />
         </set>
         <set name="email">
-            <key column="PERSON_ID"/>
+            <key column="PERSON_ID"></key>
             <element type="string" column="EMAIL"/>
         </set>
     </class>

@@ -10,40 +10,64 @@ import java.util.*;
  * Created by Ivan.Ryazanov on 16.05.2016.
  */
 public class EventManager {
+    /*
+     параметры запуска:
+      "addEvent" "listEvent" "listPerson" "addEventToPerson" "addPersonToEvent"
+      */
     public static void main(String[] args) {
         EventManager mgr = new EventManager();
         List<String> stringList = Arrays.asList(args);
         System.out.println("app parameters = "  + stringList);
-        if(stringList.contains("addEvent")){
-            mgr.createAndStoreEvent("My Event", new Date());
-        }
-        if(stringList.contains("listEvent")){
-            List<Event> events = mgr.listEvents();
-            for(int i = 0; i < events.size(); i++){
-                Event theEvent = events.get(i);
-                System.out.println(
-                        "Event: " + theEvent.getTitle() + " Time: " + theEvent.getDate()
-                );
-            }
-        }
-        if(stringList.contains("listPerson")){
-            List<Person> persons = mgr.listPerson();
-            for(Person person : persons){
-                System.out.println(person);
-            }
-        }
-        if(stringList.contains("addPersonToEvent")){
+//        if(stringList.contains("addEvent")){
+//            mgr.createAndStoreEvent("My Event", new Date());
+//        }
+        if(stringList.contains("addEventToPerson")){
             Long eventId = mgr.createAndStoreEvent("New event", new Date());
             Long personId = mgr.createAndStorePerson("Ivan", "Ivanov", 20);
-            mgr.addPersonToEvent(personId, eventId);
+            mgr.addEventToPerson(personId, eventId);
+        }
+        if(stringList.contains("addPersonToEvent")){
+            Long eventId = mgr.createAndStoreEvent("Новое событие, ожидающее привязки пользвателя", new Date());
+            Long personId = mgr.createAndStorePerson("Привяз", "Привязыч", 99);
+            mgr.addPersonToEvent(eventId, personId);
+            mgr.personEventList();
+        }
+        if(stringList.contains("listPerson")){
+            mgr.listPerson();
+        }
+        if(stringList.contains("listEvent")){
+            mgr.listEvents();
+
         }
         HibernateUtil.getSessionFactory().close();
+    }
+
+    private void personEventList() {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        List<Person> result = session.createQuery("from Person").list();
+        System.out.println("PERSON_EVENT--------");
+        for(Person person: result){
+            System.out.println(person + " have  this events: " );
+            for(Event event :  person.getEvents())
+            {
+                System.out.print(event);
+            }
+        }
+        System.out.println("PERSON_EVENT--------");
+        session.getTransaction().commit();
+
     }
 
     private List<Person> listPerson() {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         List<Person> result = session.createQuery("from Person").list();
+        System.out.println("СПИСОК СОТРУДНИКОВ-----------");
+        for (Person person : result){
+            System.out.println(person);
+        }
+        System.out.println("СПИСОК СОТРУДНИКОВ-----------");
         session.getTransaction().commit();
         return result;
     }
@@ -52,6 +76,8 @@ public class EventManager {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         List<Event> result = session.createQuery("from Event").list();
+        for(Event event : result)
+            System.out.println(event);
         session.getTransaction().commit();
         return result;
     }
@@ -80,12 +106,23 @@ public class EventManager {
         return person.getId();
     }
 
-    private void addPersonToEvent(Long personid, Long eventid){
+    private void addEventToPerson(Long personid, Long eventid){
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Person aPerson = session.load(Person.class, personid);
         Event anEvent = session.load(Event.class, eventid);
         aPerson.getEvents().add(anEvent);
+        anEvent.getParticipants().add(aPerson);
+        session.getTransaction().commit();
+    }
+
+    private void addPersonToEvent(Long eventid, Long personid){
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Event event = session.load(Event.class, eventid);
+        Person person = session.load(Person.class, personid);
+        event.getParticipants().add(person);
+        person.getEvents().add(event);
         session.getTransaction().commit();
     }
 

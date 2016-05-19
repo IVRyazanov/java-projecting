@@ -33,8 +33,16 @@ public class Person {
                 ", id=" + id +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
-                ", events=" + events +
+                ", events=" + printEvents() +
                 '}';
+    }
+
+    private String printEvents() {
+        String str = "";
+        for (Event event : events){
+            str += event.getTitle() + " ";
+        }
+        return str;
     }
 
     public void setEvents(Set<Event> events) {
