@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by Иван on 30.05.2016.
@@ -50,5 +52,39 @@ class PairManager2 extends PairManager {
             temp = getPair();
         }
         store(temp);
+
+    }
+}
+
+class ExplicitPairManager1 extends PairManager{
+    private Lock lock = new ReentrantLock();
+
+    @Override
+    public synchronized void increment() {
+        lock.lock();
+        try {
+            p.incrementX();
+            p.incrementY();
+            store(getPair());
+        } finally {
+            lock.unlock();
+        }
+    }
+}
+
+
+class ExplicitPairManager2 extends PairManager{
+    private Lock lock = new ReentrantLock();
+
+    @Override
+    public  synchronized void increment() {
+        lock.lock();
+        try {
+            p.incrementX();
+            p.incrementY();
+            store(getPair());
+        } finally {
+            lock.unlock();
+        }
     }
 }
