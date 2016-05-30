@@ -23,7 +23,7 @@ abstract public class PairManager {
     protected void store(Pair p) {
         storage.add(p);
         try {
-            TimeUnit.MILLISECONDS.sleep(100);
+            TimeUnit.MILLISECONDS.sleep(50);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -75,16 +75,17 @@ class ExplicitPairManager1 extends PairManager{
 
 class ExplicitPairManager2 extends PairManager{
     private Lock lock = new ReentrantLock();
-
     @Override
-    public  synchronized void increment() {
+    public void increment() {
+        Pair temp;
         lock.lock();
         try {
             p.incrementX();
             p.incrementY();
-            store(getPair());
+            temp = getPair();
         } finally {
             lock.unlock();
         }
+        store(temp);
     }
 }
