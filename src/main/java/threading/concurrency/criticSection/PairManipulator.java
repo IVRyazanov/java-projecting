@@ -19,7 +19,8 @@ public class PairManipulator implements Runnable{
     public String toString() {
         return "PairManipulator{" +
                 "Pair=" + pm.getPair() + " checkCounter = " + pm.checkCounter.get() +
-                '}';
+                '}' + pm.getStorage()
+                ;
     }
 }
 

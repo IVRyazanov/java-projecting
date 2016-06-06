@@ -13,11 +13,16 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 abstract public class PairManager {
     AtomicInteger checkCounter = new AtomicInteger(0);
-    protected Pair p = new Pair();
+    protected volatile Pair  p = new Pair();
     private List<Pair> storage = Collections.synchronizedList(new ArrayList<Pair>());
 
     public synchronized Pair getPair() {
         return new Pair(p.getX(), p.getY());
+    }
+
+
+    public List<Pair> getStorage() {
+        return storage;
     }
 
     protected void store(Pair p) {
@@ -46,7 +51,7 @@ class PairManager2 extends PairManager {
     @Override
     public void increment() {
         Pair temp;
-        synchronized (this){
+        synchronized (this) {
             p.incrementX();
             p.incrementY();
             temp = getPair();
@@ -56,7 +61,7 @@ class PairManager2 extends PairManager {
     }
 }
 
-class ExplicitPairManager1 extends PairManager{
+class ExplicitPairManager1 extends PairManager {
     private Lock lock = new ReentrantLock();
 
     @Override
@@ -73,8 +78,9 @@ class ExplicitPairManager1 extends PairManager{
 }
 
 
-class ExplicitPairManager2 extends PairManager{
+class ExplicitPairManager2 extends PairManager {
     private Lock lock = new ReentrantLock();
+
     @Override
     public void increment() {
         Pair temp;
