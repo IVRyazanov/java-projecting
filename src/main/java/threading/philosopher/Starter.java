@@ -25,7 +25,7 @@ public class Starter {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         String line = null;
         List<String> paramList = new ArrayList<String>();
-        while (paramList.size() < 2 || !(line = bufferedReader.readLine()).equalsIgnoreCase("exit")){
+        while (paramList.size() < 2 && !(line = bufferedReader.readLine()).equalsIgnoreCase("exit") ){
             paramList.add(line);
         }
         System.out.println(paramList);
