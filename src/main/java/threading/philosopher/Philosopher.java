@@ -22,7 +22,18 @@ public class Philosopher implements Runnable {
 
 
     public void run() {
-
+        try {
+            while (true){
+                waiting();
+                takeFlatWare(leftInstrument);
+                takeFlatWare(rightInstrument);
+                eat();
+                leftInstrument.setUse(false);
+                rightInstrument.setUse(false);
+            }
+            } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void waiting() throws InterruptedException {
@@ -33,6 +44,7 @@ public class Philosopher implements Runnable {
         if(instrument.isUse()){
             wait();
         }
+        System.out.println(this + "take "  + instrument);
         instrument.setUse(true);
     }
 
