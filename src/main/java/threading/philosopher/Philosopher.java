@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 public class Philosopher implements Runnable {
     private int koef;
     private Random random = new Random();
-    private static int counter = 0;
+    private static int counter = 1;
     private int id = counter++;
     Flatware leftInstrument;
     Flatware rightInstrument;
@@ -23,13 +23,15 @@ public class Philosopher implements Runnable {
 
     public void run() {
         try {
-            while (true){
+            while (!Thread.interrupted()){
+                System.out.println(this + "thinking...");
                 waiting();
-                takeFlatWare(leftInstrument);
-                takeFlatWare(rightInstrument);
+                System.out.println(this + "ready to eat!!!");
+                leftInstrument.take();
+                rightInstrument.take();
                 eat();
-                leftInstrument.setUse(false);
-                rightInstrument.setUse(false);
+                leftInstrument.drop();
+                rightInstrument.drop();
             }
             } catch (InterruptedException e) {
             e.printStackTrace();
@@ -40,15 +42,7 @@ public class Philosopher implements Runnable {
         TimeUnit.MILLISECONDS.sleep(random.nextInt(100) * koef);
     }
 
-    public void takeFlatWare(Flatware instrument) throws InterruptedException {
-        if(instrument.isUse()){
-            wait();
-        }
-        System.out.println(this + "take "  + instrument);
-        instrument.setUse(true);
-    }
-
-    public void eat() throws InterruptedException {
+    public synchronized void eat() throws InterruptedException {
         System.out.println(this + " eating...");
         waiting();
         System.out.println(this + " finish to eat...");
