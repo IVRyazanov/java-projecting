@@ -32,4 +32,11 @@
         <property name="diameter" value="55"/>
         <property name="name" value="no-name"/>
     </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.h2.Driver"/>
+        <property name="url" value="jdbc:h2:~/test2"/>
+        <property name="username" value="sa"/>
+        <property name="password" value=""/>
+    </bean>
 </beans>
