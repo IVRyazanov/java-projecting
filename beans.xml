@@ -9,4 +9,27 @@
     <bean id="helloWorld" class="spring.xmlUsage.HelloWorld" scope="prototype" init-method="init">
         <property name="message" value="Hello world"/>
     </bean>
+    
+    
+    <bean id="auto" class="spring.innerBeans.Auto" scope="prototype">
+        <property name="name" value="Toyota Land Crouser"/>
+        <property name="engine" ref="engine"/>
+        <property name="wheels" >
+            <list>
+                <ref bean="wheel"/>
+                <ref bean="wheel"/>
+                <ref bean="wheel"/>
+                <ref bean="wheel"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id = "engine" class="spring.innerBeans.Engine" scope="prototype">
+        <property name="name" value="V6"/>
+    </bean>
+
+    <bean id = "wheel" class="spring.innerBeans.Wheel" scope="prototype">
+        <property name="diameter" value="55"/>
+        <property name="name" value="no-name"/>
+    </bean>
 </beans>
