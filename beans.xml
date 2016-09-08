@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- A simple bean definition -->
+    <bean id="helloWorld" class="spring.xmlUsage.HelloWorld" scope="prototype" init-method="init">
+        <property name="message" value="Hello world"/>
+    </bean>
+    
+    
+    <bean id="auto" class="spring.innerBeans.Auto" scope="prototype">
+        <property name="name" value="Toyota Land Crouser"/>
+        <property name="engine" ref="engine"/>
+        <property name="wheels" >
+            <list>
+                <ref bean="wheel"/>
+                <ref bean="wheel"/>
+                <ref bean="wheel"/>
+                <ref bean="wheel"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id = "engine" class="spring.innerBeans.Engine" scope="prototype">
+        <property name="name" value="V6"/>
+    </bean>
+
+    <bean id = "wheel" class="spring.innerBeans.Wheel" scope="prototype">
+        <property name="diameter" value="55"/>
+        <property name="name" value="no-name"/>
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.h2.Driver"/>
+        <property name="url" value="jdbc:h2:~/test2"/>
+        <property name="username" value="sa"/>
+        <property name="password" value=""/>
+    </bean>
+</beans>
